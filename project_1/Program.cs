@@ -14,6 +14,12 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.MigrateAsync();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -70,10 +76,12 @@ app.MapPost("/api/tasks", async (CreateTaskRequest request, AppDbContext db) =>
     }
 
     var title = request.Title!.Trim();
+    var description = request.Description?.Trim();
 
     var newTask = new TaskItem
     {
         Title = title,
+        Description = description,
         IsCompleted = false,
         CreatedAt = DateTime.UtcNow
     };
@@ -174,7 +182,7 @@ static string? ValidateTaskTitle(string? title)
 
     return null;
 }
-record CreateTaskRequest(string? Title);
+record CreateTaskRequest(string? Title, string? Description);
 
 
 public partial class Program { }
