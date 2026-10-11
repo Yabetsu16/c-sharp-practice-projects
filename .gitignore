@@ -1,0 +1,16 @@
+# .NET build output
+**/bin/
+**/obj/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+
+# Local SQLite database
+**/tasks.db
+**/tasks.db-shm
+**/tasks.db-wal
+
+# Editor settings
+.vscode/
